@@ -137,13 +137,13 @@ JUAN RAUL
 </select>
 
 <label>Boxer</label>
-<input id="boxer" type="number" value="0">
+<input id="boxer" type="number" placeholder="0">
 
 <label>Atlet</label>
-<input id="atlet" type="number" value="0">
+<input id="atlet" type="number" placeholder="0">
 
 <label>Çorap (Düzine)</label>
-<input id="sock" type="number" value="0"><button onclick="hesapla()">Hesapla</button>
+<input id="sock" type="number" placeholder="0">
 
 <div class="result" id="result">
 
@@ -163,9 +163,9 @@ function hesapla(){
 
 let kapasite=document.getElementById("bag").value.split(",");
 
-let boxer=Number(document.getElementById("boxer").value);
-let atlet=Number(document.getElementById("atlet").value);
-let corap=Number(document.getElementById("sock").value);
+let boxer = Number(document.getElementById("boxer").value || 0);
+let atlet = Number(document.getElementById("atlet").value || 0);
+let corap = Number(document.getElementById("sock").value || 0);
 
 let oran=
 (boxer/kapasite[0])+
