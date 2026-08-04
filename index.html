@@ -1,0 +1,16 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JUAN RAUL Çuval Hesaplayıcısı</title>
+<style>body{font-family:Arial;background:#111;color:#fff;max-width:500px;margin:auto;padding:20px}input,select,button{width:100%;padding:10px;margin:8px 0}button{background:#c00;color:#fff;border:0}#r{margin-top:15px;background:#222;padding:10px;border-radius:8px}</style></head>
+<body><h2>JUAN RAUL<br>Çuval Hesaplayıcısı</h2>
+<select id=t><option value="500,350,80">🔵 Mavi Küçük</option><option value="800,500,110">🔴 Kırmızı Küçük</option><option value="1200,650,180">🔴 Kırmızı Büyük</option><option value="450,300,60">📦 Koli 80×50×50</option></select>
+<input id=b type=number placeholder="Boxer Adedi">
+<input id=a type=number placeholder="Atlet Adedi">
+<input id=c type=number placeholder="Çorap (Düzine)">
+<button onclick="h()">Hesapla</button><div id=r></div>
+<script>
+function h(){
+let s=t.value.split(',').map(Number);
+let B=+b.value||0,A=+a.value||0,C=+c.value||0;
+let rb=Math.ceil(B/s[0]),ra=Math.ceil(A/s[1]),rc=Math.ceil(C/s[2]);
+r.innerHTML=`<b>Sonuç</b><br>Boxer: ${rb}<br>Atlet: ${ra}<br>Çorap: ${rc}<br><hr><b>Toplam: ${rb+ra+rc}</b>`;
+}
+</script></body></html>
