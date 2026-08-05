@@ -14,7 +14,7 @@ body{background:#f5f5f5;padding:20px}
 label{display:block;margin-top:15px;font-weight:bold}
 select,input,button{width:100%;padding:12px;margin-top:5px;border-radius:10px;font-size:17px}
 select,input{border:1px solid #ccc}
-button{margin-top:20px;padding:15px;background:#c40000;color:#fff;border:none;font-size:20px}
+button{margin-top:20px;padding:15px;background:#c40000;color:#fff;border:none;font-size:20px;cursor:pointer}
 .result{display:none;margin-top:20px}
 details{margin:12px 0;border:1px solid #ddd;border-radius:10px;padding:8px}
 summary{cursor:pointer;font-weight:bold;list-style:none}
@@ -50,7 +50,12 @@ summary::-webkit-details-marker{display:none}
     <option value="1200,650,180">🔴 Kırmızı Büyük</option>
     <option value="450,300,60">📦 Koli 80×50×50</option>
   </select>
-  
+
+  <!-- خانة جديدة لإدخال رابط الطلبية -->
+  <label>Linkten Hesapla</label>
+  <input id="orderUrl" type="text" placeholder="Sipariş linkini buraya yapıştırın">
+  <button onclick="loadOrder()">Linkten Hesapla</button>
+
   <label>Boxer</label><input id="boxer" type="number" min="0">
   <label>Atlet</label><input id="atlet" type="number" min="0">
   <label>Çorap (Düzine)</label><input id="sock" type="number" min="0">
@@ -149,13 +154,3 @@ function exportPDF(){
     });
     y+=5;
   });
-
-  const pdfBlob = doc.output("blob");
-  const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    navigator.share({
-      title: "Çuval Raporu",
-      text: "Çuval raporu PDF dosyası",
-      files: [file]
-    });
-  }
