@@ -59,7 +59,7 @@ summary::-webkit-details-marker{display:none}
   </div>
 </div>
 <script>
-let mode='product'; // الوضع الافتراضي صار "Ürüne Göre Doldur"
+let mode='product'; // الافتراضي "Ürüne Göre Doldur"
 function setMode(m){
   mode=m;
   modeEqual.classList.toggle('active',m==='equal');
@@ -102,7 +102,10 @@ function hesapla(){
       html+=makeBag(`Çuval ${bagIndex}`,Math.round(used*100),content.Boxer,content.Atlet,content['Çorap']);
       bagIndex++;
     }
-    total.innerText="Toplam: "+(bagIndex-1)+" Çuval";result.style.display='block';
+    // حساب مع النسبة العشرية
+    let toplam = (bagIndex-1) + (rem.Boxer/k[0]) + (rem.Atlet/k[1]) + (rem.Çorap/k[2]);
+    total.innerText="Toplam: "+toplam.toFixed(2)+" Çuval";
+    result.style.display='block';
   }
   bags.innerHTML=html;
 }
