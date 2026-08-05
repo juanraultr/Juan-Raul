@@ -49,7 +49,7 @@ summary::-webkit-details-marker{display:none}
   <div id="result" class="result">
     <h2 id="total"></h2>
     <div id="bags"></div>
-    <!-- النص التوضيحي تم حذفه -->
+    <!-- açıklama yazısı kaldırıldı -->
   </div>
 </div>
 <script>
@@ -67,18 +67,27 @@ function makeBag(title,p,bb,aa,ss){
   return `<details><summary>${title} - %${p}<div class="bar"><div class="fill" style="width:${p}%;background:${color}"></div></div></summary><div class="info">Boxer: ${bb}<br>Atlet: ${aa}<br>Çorap: ${ss}</div></details>`;
 }
 function hesapla(){
-  let k=bag.value.split(",").map(Number),b=+boxer.value||0,a=+atlet.value||0,s=+sock.value||0;
+  let k=bag.value.split(",").map(Number),
+      b=+boxer.value||0,
+      a=+atlet.value||0,
+      s=+sock.value||0;
   let html="";
   if(mode==='equal'){
-    let oran=toplamCuval(k,b,a,s),full=Math.floor(oran),rem=Math.round((oran-full)*100);
-    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";result.style.display="block";
+    let oran=toplamCuval(k,b,a,s);
+    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
+    result.style.display="block";
+    let full=Math.floor(oran),rem=Math.round((oran-full)*100);
     let cnt=full+(rem>0||full===0?1:0);
     for(let i=1;i<=cnt;i++){
       let p=(i<=full)?100:rem;
       let bb=Math.round((b/cnt));
       let aa=Math.round((a/cnt));
       let ss=Math.round((s/cnt));
-      if(i===cnt){bb=b-Math.round((cnt-1)*(b/cnt));aa=a-Math.round((cnt-1)*(a/cnt));ss=s-Math.round((cnt-1)*(s/cnt));}
+      if(i===cnt){
+        bb=b-Math.round((cnt-1)*(b/cnt));
+        aa=a-Math.round((cnt-1)*(a/cnt));
+        ss=s-Math.round((cnt-1)*(s/cnt));
+      }
       html+=makeBag(`Çuval ${i}`,p,bb,aa,ss);
     }
   }else{
@@ -96,8 +105,8 @@ function hesapla(){
       html+=makeBag(`Çuval ${bagIndex}`,Math.round(used*100),content.Boxer,content.Atlet,content['Çorap']);
       bagIndex++;
     }
-    let toplam = (bagIndex-1) + (rem.Boxer/k[0]) + (rem.Atlet/k[1]) + (rem.Çorap/k[2]);
-    total.innerText="Toplam: "+toplam.toFixed(2)+" Çuval";
+    let oran=toplamCuval(k,b,a,s);
+    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
     result.style.display='block';
   }
   bags.innerHTML=html;
