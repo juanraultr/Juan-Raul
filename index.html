@@ -49,7 +49,6 @@ summary::-webkit-details-marker{display:none}
   <div id="result" class="result">
     <h2 id="total"></h2>
     <div id="bags"></div>
-    <!-- açıklama yazısı kaldırıldı -->
   </div>
 </div>
 <script>
@@ -64,7 +63,11 @@ function toplamCuval(k,b,a,s){return (b/k[0])+(a/k[1])+(s/k[2]);}
 function makeBag(title,p,bb,aa,ss){
   let color="#00b050";
   if(p<50){color="#ff3b30";}else if(p<100){color="#ffc107";}
-  return `<details><summary>${title} - %${p}<div class="bar"><div class="fill" style="width:${p}%;background:${color}"></div></div></summary><div class="info">Boxer: ${bb}<br>Atlet: ${aa}<br>Çorap: ${ss}</div></details>`;
+  let info="";
+  if(bb>0) info+="Boxer: "+bb+"<br>";
+  if(aa>0) info+="Atlet: "+aa+"<br>";
+  if(ss>0) info+="Çorap: "+ss+"<br>";
+  return `<details><summary>${title} - %${p}<div class="bar"><div class="fill" style="width:${p}%;background:${color}"></div></div></summary><div class="info">${info}</div></details>`;
 }
 function hesapla(){
   let k=bag.value.split(",").map(Number),
