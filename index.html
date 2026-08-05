@@ -8,7 +8,8 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{background:#f5f5f5;padding:20px}
 .container{max-width:520px;margin:auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 0 15px rgba(0,0,0,.2)}
-.logo{text-align:center;font-size:28px;font-weight:bold;color:#c40000}
+.logo{text-align:center;margin-bottom:10px}
+.logo img{max-width:200px}
 .sub{text-align:center;color:#555;margin:8px 0 20px}
 label{display:block;margin-top:15px;font-weight:bold}
 select,input,button{width:100%;padding:12px;margin-top:5px;border-radius:10px;font-size:17px}
@@ -32,7 +33,10 @@ summary::-webkit-details-marker{display:none}
 </head>
 <body>
 <div class="container">
-  <div class="logo">JUAN RAUL</div>
+  <div class="logo">
+    <!-- اللوغو الجديد -->
+    <img src="AISelect_20260805_103617_Drive.png" alt="JUAN RAUL Logo">
+  </div>
   <div class="sub">Çuval Hesaplayıcısı</div>
   
   <div class="toggle-wrap">
@@ -122,7 +126,7 @@ function hesapla(){
     }
   }
   bags.innerHTML=html;
-  document.getElementById("shareBtn").style.display="block"; // زر المشاركة يظهر بعد الحساب
+  document.getElementById("shareBtn").style.display="block";
 }
 
 function exportPDF(){
@@ -147,7 +151,6 @@ function exportPDF(){
     y+=5;
   });
 
-  // مشاركة بدلاً من تحميل تلقائي
   const pdfBlob = doc.output("blob");
   const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
   if (navigator.share) {
@@ -157,10 +160,9 @@ function exportPDF(){
       files: [file]
     });
   } else {
-    alert("Paylaşım desteği yok, PDF indirildi.");
     doc.save("cuval_raporu.pdf");
   }
 }
 </script>
 </body>
-</
+</html>
