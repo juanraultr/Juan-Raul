@@ -35,7 +35,7 @@ summary::-webkit-details-marker{display:none}
   <div class="sub">Çuval Hesaplayıcısı</div>
   
   <div class="toggle-wrap">
-    <label for="toggle">Eşit Dağıt</label>
+    <label>Eşit Dağıt</label>
     <div id="toggle" class="toggle"></div>
   </div>
   
@@ -83,4 +83,44 @@ function hesapla(){
       s=+sock.value||0;
   let html="";
   if(mode==='equal'){
-    let oran=toplamCuval(k,b
+    let oran=toplamCuval(k,b,a,s);
+    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
+    result.style.display="block";
+    let full=Math.floor(oran),rem=Math.round((oran-full)*100);
+    let cnt=full+(rem>0||full===0?1:0);
+    for(let i=1;i<=cnt;i++){
+      let p=(i<=full)?100:rem;
+      let bb=Math.round((b/cnt));
+      let aa=Math.round((a/cnt));
+      let ss=Math.round((s/cnt));
+      if(i===cnt){
+        bb=b-Math.round((cnt-1)*(b/cnt));
+        aa=a-Math.round((cnt-1)*(a/cnt));
+        ss=s-Math.round((cnt-1)*(s/cnt));
+      }
+      html+=makeBag(`Çuval ${i}`,p,bb,aa,ss);
+    }
+  }else{
+    let rem={Boxer:b,Atlet:a,Çorap:s};
+    let bagIndex=1;
+    while(rem.Boxer>0||rem.Atlet>0||rem.Çorap>0){
+      let used=0,content={Boxer:0,Atlet:0,Çorap:0};
+      let p;
+      p=Math.min(rem.Boxer/k[0],1-used);
+      if(p>0){content.Boxer=Math.round(p*k[0]);rem.Boxer-=content.Boxer;used+=p;}
+      p=Math.min(rem.Atlet/k[1],1-used);
+      if(p>0){content.Atlet=Math.round(p*k[1]);rem.Atlet-=content.Atlet;used+=p;}
+      p=Math.min(rem['Çorap']/k[2],1-used);
+      if(p>0){content['Çorap']=Math.round(p*k[2]);rem['Çorap']-=content['Çorap'];used+=p;}
+      html+=makeBag(`Çuval ${bagIndex}`,Math.round(used*100),content.Boxer,content.Atlet,content['Çorap']);
+      bagIndex++;
+    }
+    let oran=toplamCuval(k,b,a,s);
+    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
+    result.style.display='block';
+  }
+  bags.innerHTML=html;
+}
+</script>
+</body>
+</html>
