@@ -9,7 +9,7 @@
 body{background:#f5f5f5;padding:20px}
 .container{max-width:520px;margin:auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 0 15px rgba(0,0,0,.2)}
 .logo{text-align:center;margin-bottom:15px}
-.logo img{width:100%;max-width:500px} /* مكبّر اللوغو */
+.logo img{width:100%;max-width:500px}
 .sub{text-align:center;color:#555;margin:8px 0 20px}
 label{display:block;margin-top:15px;font-weight:bold}
 select,input,button{width:100%;padding:12px;margin-top:5px;border-radius:10px;font-size:17px}
@@ -28,13 +28,12 @@ summary::-webkit-details-marker{display:none}
 .toggle::after{content:"";width:13px;height:13px;background:#fff;border-radius:50%;position:absolute;top:1px;left:1px;transition:0.3s}
 .toggle.active{background:#c40000}
 .toggle.active::after{left:16px}
-#shareBtn{display:none;margin-top:10px;background:#007bff}
+#shareBtn{display:none;margin-top:10px;background:#007bff;width:100%}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="logo">
-    <!-- اللوغو الجديد مكبّر -->
     <img src="AISelect_20260805_103617_Drive.png" alt="JUAN RAUL Logo">
   </div>
   <div class="sub">Çuval Hesaplayıcısı</div>
@@ -153,16 +152,10 @@ function exportPDF(){
 
   const pdfBlob = doc.output("blob");
   const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
-  if (navigator.share) {
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
     navigator.share({
       title: "Çuval Raporu",
       text: "Çuval raporu PDF dosyası",
       files: [file]
     });
-  } else {
-    doc.save("cuval_raporu.pdf");
   }
-}
-</script>
-</body>
-</html>
