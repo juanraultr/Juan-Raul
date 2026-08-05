@@ -45,7 +45,7 @@ summary::-webkit-details-marker{display:none}
 
   <!-- رابط الطلبية -->
   <label>Rapor Linki</label>
-  <input id="orderLink" type="text" placeholder="https://site.com/order?boxer=10&atlet=5&sock=2">
+  <input id="orderLink" type="text" placeholder="https://orders.mc.app/...">
   <button onclick="parseLink()">Linkten Oku</button>
   
   <label>Çuval Türü</label>
@@ -79,16 +79,35 @@ toggle.addEventListener('click',()=>{
   mode=toggle.classList.contains('active')?'equal':'product';
 });
 
-// قراءة الرابط
-function parseLink(){
+// قراءة الطلبية من الرابط
+async function parseLink(){
+  let link = document.getElementById("orderLink").value;
   try {
-    let url = new URL(document.getElementById("orderLink").value);
-    boxer.value = url.searchParams.get("boxer") || 0;
-    atlet.value = url.searchParams.get("atlet") || 0;
-    sock.value = url.searchParams.get("sock") || 0;
+    let res = await fetch(link);
+    let text = await res.text();
+
+    // Boxer
+    let boxerMatch = text.match(/boxer.*?(\d+)\s*×\s*(\d+)/i);
+    if(boxerMatch){
+      boxer.value = parseInt(boxerMatch[1]) * parseInt(boxerMatch[2]);
+    }
+
+    // Atlet / Fanila / Korse
+    let atletMatch = text.match(/(atlet|fanila|korse).*?(\d+)\s*×\s*(\d+)/i);
+    if(atletMatch){
+      atlet.value = parseInt(atletMatch[2]) * parseInt(atletMatch[3]);
+    }
+
+    // Çorap / Patik / Yarım Kunş
+    let sockMatch = text.match(/(çorap|patik|yarım\s*kunş).*?(\d+)\s*×\s*(\d+)/i);
+    if(sockMatch){
+      let dozen = parseInt(sockMatch[2]) * parseInt(sockMatch[3]);
+      sock.value = dozen/12;
+    }
+
     hesapla();
   } catch(e){
-    alert("Lütfen geçerli bir link giriniz!");
+    alert("Bu linkten veri okunamadı!");
   }
 }
 
@@ -142,43 +161,48 @@ function hesapla(){
       bagIndex++;
     }
   }
-  bags.innerHTML=html;
-  document.getElementById("shareBtn").style.display="block";
+    bags.innerHTML = html;
+  document.getElementById("shareBtn").style.display = "block";
 }
 
-function exportPDF(){
+async function exportPDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const pdf = new jsPDF();
 
-  doc.setFontSize(16);
-  doc.text("JUAN RAUL - Çuval Raporu", 20, 20);
-  doc.setFontSize(12);
-  doc.text(document.getElementById("total").innerText, 20, 30);
+  pdf.setFont("helvetica");
+  pdf.setFontSize(18);
+  pdf.text("JUAN RAUL", 20, 20);
+  pdf.setFontSize(14);
+  pdf.text("Cuval Raporu", 20, 30);
 
-  let y = 50;
-  document.querySelectorAll("#bags details").forEach((bag,i)=>{
-    doc.text(`Çuval ${i+1}`, 20, y);
-    y+=10;
-    bag.querySelector(".info").innerHTML.split("<br>").forEach(line=>{
-      if(line.trim()!==""){
-        doc.text(line.replace(/<[^>]+>/g,''), 30, y);
-        y+=10;
+  pdf.setFontSize(12);
+  pdf.text(total.innerText, 20, 45);
+
+  let y = 60;
+
+  document.querySelectorAll("#bags details").forEach((bag) => {
+    const title = bag.querySelector("summary").innerText;
+    const info = bag.querySelector(".info").innerText;
+
+    pdf.text(title, 20, y);
+    y += 7;
+
+    info.split("\n").forEach(line => {
+      if (line.trim()) {
+        pdf.text(line.trim(), 25, y);
+        y += 6;
       }
     });
-    y+=5;
+
+    y += 5;
+
+    if (y > 270) {
+      pdf.addPage();
+      y = 20;
+    }
   });
 
-  const pdfBlob = doc.output("blob");
-  const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
-  if (navigator.share) {
-    navigator.share({
-      title: "Çuval Raporu",
-      text: "Çuval raporu PDF dosyası",
-      files: [file]
-    });
-  } else {
-    doc.save("cuval_raporu.pdf");
-  }
+  pdf.save("JUAN_RAUL_Cuval_Raporu.pdf");
 }
 </script>
 </body>
