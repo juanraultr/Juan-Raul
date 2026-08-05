@@ -82,10 +82,11 @@ function hesapla(){
       a=+atlet.value||0,
       s=+sock.value||0;
   let html="";
+  let oran=toplamCuval(k,b,a,s);
+  total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
+  result.style.display="block";
+  
   if(mode==='equal'){
-    let oran=toplamCuval(k,b,a,s);
-    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
-    result.style.display="block";
     let full=Math.floor(oran),rem=(oran-full)*100;
     let cnt=full+(rem>=20?1:0); // شوال إضافي فقط إذا الباقي ≥ 20%
     for(let i=1;i<=cnt;i++){
@@ -115,9 +116,6 @@ function hesapla(){
       html+=makeBag(`Çuval ${bagIndex}`,Math.round(used*100),content.Boxer,content.Atlet,content['Çorap']);
       bagIndex++;
     }
-    let oran=toplamCuval(k,b,a,s);
-    total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
-    result.style.display='block';
   }
   bags.innerHTML=html;
 }
