@@ -24,7 +24,6 @@ summary::-webkit-details-marker{display:none}
 .mode-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .mode-btn{padding:12px;border:1px solid #c40000;background:#fff;color:#c40000;font-weight:bold;cursor:pointer}
 .mode-btn.active{background:#c40000;color:#fff}
-.note{margin-top:10px;font-size:13px;color:#666;line-height:1.5}
 </style>
 </head>
 <body>
@@ -43,23 +42,18 @@ summary::-webkit-details-marker{display:none}
   <label>Çorap (Düzine)</label><input id="sock" type="number" min="0">
   <label>Dağıtım Türü</label>
   <div class="mode-wrap">
-    <!-- زر حسب المنتج على اليسار وفعّال افتراضياً -->
     <button id="modeProduct" class="mode-btn active" type="button" onclick="setMode('product')">📦 Ürüne Göre Doldur</button>
-    <!-- زر التوزيع المتساوي على اليمين -->
     <button id="modeEqual" class="mode-btn" type="button" onclick="setMode('equal')">⚖️ Eşit Dağıt</button>
   </div>
   <button onclick="hesapla()">Hesapla</button>
   <div id="result" class="result">
     <h2 id="total"></h2>
     <div id="bags"></div>
-    <div class="note">
-      Eşit Dağıt: ürünler mevcut çuvallara dengeli paylaştırılır. 
-      Ürüne Göre Doldur: önce Boxer, sonra Atlet, sonra Çorap çuvallara sırayla yerleştirilir.
-    </div>
+    <!-- النص التوضيحي تم حذفه -->
   </div>
 </div>
 <script>
-let mode='product'; // الافتراضي "Ürüne Göre Doldur"
+let mode='product';
 function setMode(m){
   mode=m;
   modeEqual.classList.toggle('active',m==='equal');
@@ -102,7 +96,6 @@ function hesapla(){
       html+=makeBag(`Çuval ${bagIndex}`,Math.round(used*100),content.Boxer,content.Atlet,content['Çorap']);
       bagIndex++;
     }
-    // حساب مع النسبة العشرية
     let toplam = (bagIndex-1) + (rem.Boxer/k[0]) + (rem.Atlet/k[1]) + (rem.Çorap/k[2]);
     total.innerText="Toplam: "+toplam.toFixed(2)+" Çuval";
     result.style.display='block';
