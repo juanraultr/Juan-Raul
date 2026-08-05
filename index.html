@@ -86,10 +86,10 @@ function hesapla(){
     let oran=toplamCuval(k,b,a,s);
     total.innerText="Toplam: "+oran.toFixed(2)+" Çuval";
     result.style.display="block";
-    let full=Math.floor(oran),rem=Math.round((oran-full)*100);
-    let cnt=full+(rem>0||full===0?1:0);
+    let full=Math.floor(oran),rem=(oran-full)*100;
+    let cnt=full+(rem>=20?1:0); // شوال إضافي فقط إذا الباقي ≥ 20%
     for(let i=1;i<=cnt;i++){
-      let p=(i<=full)?100:rem;
+      let p=(i<=full)?100:Math.round(rem);
       let bb=Math.round((b/cnt));
       let aa=Math.round((a/cnt));
       let ss=Math.round((s/cnt));
