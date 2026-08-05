@@ -27,6 +27,7 @@ summary::-webkit-details-marker{display:none}
 .toggle::after{content:"";width:13px;height:13px;background:#fff;border-radius:50%;position:absolute;top:1px;left:1px;transition:0.3s}
 .toggle.active{background:#c40000}
 .toggle.active::after{left:16px}
+#shareBtn{display:none;margin-top:10px;background:#007bff}
 </style>
 </head>
 <body>
@@ -52,15 +53,14 @@ summary::-webkit-details-marker{display:none}
   <label>Çorap (Düzine)</label><input id="sock" type="number" min="0">
   
   <button onclick="hesapla()">Hesapla</button>
-  <button onclick="exportPDF()">PDF Olarak Paylaş</button>
   
   <div id="result" class="result">
     <h2 id="total"></h2>
     <div id="bags"></div>
+    <button id="shareBtn" onclick="exportPDF()">PDF Olarak Paylaş</button>
   </div>
 </div>
 
-<!-- jsPDF kütüphanesi -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
@@ -122,6 +122,7 @@ function hesapla(){
     }
   }
   bags.innerHTML=html;
+  document.getElementById("shareBtn").style.display="block"; // زر المشاركة يظهر بعد الحساب
 }
 
 function exportPDF(){
@@ -146,8 +147,20 @@ function exportPDF(){
     y+=5;
   });
 
-  doc.save("cuval_raporu.pdf");
+  // مشاركة بدلاً من تحميل تلقائي
+  const pdfBlob = doc.output("blob");
+  const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
+  if (navigator.share) {
+    navigator.share({
+      title: "Çuval Raporu",
+      text: "Çuval raporu PDF dosyası",
+      files: [file]
+    });
+  } else {
+    alert("Paylaşım desteği yok, PDF indirildi.");
+    doc.save("cuval_raporu.pdf");
+  }
 }
 </script>
 </body>
-</html>
+</
