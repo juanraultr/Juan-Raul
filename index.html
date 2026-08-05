@@ -52,12 +52,17 @@ summary::-webkit-details-marker{display:none}
   <label>Çorap (Düzine)</label><input id="sock" type="number" min="0">
   
   <button onclick="hesapla()">Hesapla</button>
+  <button onclick="exportPDF()">PDF Olarak Paylaş</button>
   
   <div id="result" class="result">
     <h2 id="total"></h2>
     <div id="bags"></div>
   </div>
 </div>
+
+<!-- jsPDF kütüphanesi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
 let mode='product';
 const toggle=document.getElementById('toggle');
@@ -87,13 +92,13 @@ function hesapla(){
   result.style.display="block";
   
   if(mode==='equal'){
-    let cnt=Math.ceil(oran); // عدد الشوالات
-    let percent=(oran/cnt*100).toFixed(0); // نسبة متساوية لكل شوال
+    let cnt=Math.ceil(oran);
+    let percent=(oran/cnt*100).toFixed(0);
     for(let i=1;i<=cnt;i++){
       let bb=Math.round(b/cnt);
       let aa=Math.round(a/cnt);
       let ss=Math.round(s/cnt);
-      if(i===cnt){ // آخر شوال ياخد البواقي
+      if(i===cnt){
         bb=b-Math.round((cnt-1)*(b/cnt));
         aa=a-Math.round((cnt-1)*(a/cnt));
         ss=s-Math.round((cnt-1)*(s/cnt));
@@ -117,6 +122,31 @@ function hesapla(){
     }
   }
   bags.innerHTML=html;
+}
+
+function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("JUAN RAUL - Çuval Raporu", 20, 20);
+  doc.setFontSize(12);
+  doc.text(document.getElementById("total").innerText, 20, 30);
+
+  let y = 50;
+  document.querySelectorAll("#bags details").forEach((bag,i)=>{
+    doc.text(`Çuval ${i+1}`, 20, y);
+    y+=10;
+    bag.querySelector(".info").innerHTML.split("<br>").forEach(line=>{
+      if(line.trim()!==""){
+        doc.text(line.replace(/<[^>]+>/g,''), 30, y);
+        y+=10;
+      }
+    });
+    y+=5;
+  });
+
+  doc.save("cuval_raporu.pdf");
 }
 </script>
 </body>
