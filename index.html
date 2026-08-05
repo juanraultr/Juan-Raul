@@ -76,6 +76,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
+    // Toggle
     let mode = 'product';
     const toggle = document.getElementById('toggle');
     toggle.addEventListener('click', () => {
@@ -83,6 +84,7 @@
       mode = toggle.classList.contains('active') ? 'equal' : 'product';
     });
 
+    // حساب الشوالات
     function toplamCuval(k, b, a, s) {
       return (b / k[0]) + (a / k[1]) + (s / k[2]);
     }
@@ -134,14 +136,4 @@
           if (p > 0) { content.Atlet = Math.round(p * k[1]); rem.Atlet -= content.Atlet; used += p; }
           p = Math.min(rem['Çorap'] / k[2], 1 - used);
           if (p > 0) { content['Çorap'] = Math.round(p * k[2]); rem['Çorap'] -= content['Çorap']; used += p; }
-          html += makeBag(`Çuval ${bagIndex}`, Math.round(used * 100), content.Boxer, content.Atlet, content['Çorap']);
-          bagIndex++;
-        }
-      }
-      bags.innerHTML = html;
-      document.getElementById("shareBtn").style.display = "block";
-    }
-
-    async function loadOrder() {
-      const url = document.getElementById("orderUrl").value;
-      if (!url
+          html += makeBag(`Çuval ${bagIndex}`, Math.round(used
