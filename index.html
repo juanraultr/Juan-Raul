@@ -9,7 +9,7 @@
 body{background:#f5f5f5;padding:20px}
 .container{max-width:520px;margin:auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 0 15px rgba(0,0,0,.2)}
 .logo{text-align:center;margin-bottom:15px}
-.logo img{width:100%;max-width:500px} /* مكبّر اللوغو */
+.logo img{width:100%;max-width:500px}
 .sub{text-align:center;color:#555;margin:8px 0 20px}
 label{display:block;margin-top:15px;font-weight:bold}
 select,input,button{width:100%;padding:12px;margin-top:5px;border-radius:10px;font-size:17px}
@@ -34,7 +34,6 @@ summary::-webkit-details-marker{display:none}
 <body>
 <div class="container">
   <div class="logo">
-    <!-- اللوغو الجديد مكبّر -->
     <img src="AISelect_20260805_103617_Drive.png" alt="JUAN RAUL Logo">
   </div>
   <div class="sub">Çuval Hesaplayıcısı</div>
@@ -43,6 +42,11 @@ summary::-webkit-details-marker{display:none}
     <label>Eşit Dağıt</label>
     <div id="toggle" class="toggle"></div>
   </div>
+
+  <!-- رابط الطلبية -->
+  <label>Rapor Linki</label>
+  <input id="orderLink" type="text" placeholder="https://site.com/order?boxer=10&atlet=5&sock=2">
+  <button onclick="parseLink()">Linkten Oku</button>
   
   <label>Çuval Türü</label>
   <select id="bag">
@@ -74,6 +78,19 @@ toggle.addEventListener('click',()=>{
   toggle.classList.toggle('active');
   mode=toggle.classList.contains('active')?'equal':'product';
 });
+
+// قراءة الرابط
+function parseLink(){
+  try {
+    let url = new URL(document.getElementById("orderLink").value);
+    boxer.value = url.searchParams.get("boxer") || 0;
+    atlet.value = url.searchParams.get("atlet") || 0;
+    sock.value = url.searchParams.get("sock") || 0;
+    hesapla();
+  } catch(e){
+    alert("Lütfen geçerli bir link giriniz!");
+  }
+}
 
 function toplamCuval(k,b,a,s){return (b/k[0])+(a/k[1])+(s/k[2]);}
 function makeBag(title,p,bb,aa,ss){
