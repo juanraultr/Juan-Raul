@@ -1,73 +1,145 @@
-bags.innerHTML = html;
-      document.getElementById("shareBtn").style.display = "block";
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>JUAN RAUL - Çuval Hesaplayıcısı</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial }
+    body { background:#f5f5f5; padding:20px }
+    .container { max-width:520px; margin:auto; background:#fff; padding:20px; border-radius:15px; box-shadow:0 0 15px rgba(0,0,0,.2) }
+    .logo { text-align:center; margin-bottom:15px }
+    .logo img { width:100%; max-width:500px }
+    .sub { text-align:center; color:#555; margin:8px 0 20px }
+    label { display:block; margin-top:15px; font-weight:bold }
+    select, input, button { width:100%; padding:12px; margin-top:5px; border-radius:10px; font-size:17px }
+    select, input { border:1px solid #ccc }
+    button { margin-top:20px; padding:15px; background:#c40000; color:#fff; border:none; font-size:20px; cursor:pointer }
+    .result { display:none; margin-top:20px }
+    details { margin:12px 0; border:1px solid #ddd; border-radius:10px; padding:8px }
+    summary { cursor:pointer; font-weight:bold; list-style:none }
+    summary::-webkit-details-marker { display:none }
+    .bar { height:18px; background:#ddd; border-radius:20px; overflow:hidden; margin-top:8px }
+    .fill { height:100%; background:#00b050 }
+    .info { padding:10px 5px; line-height:1.8 }
+    .toggle-wrap { display:flex; justify-content:flex-end; align-items:center; margin-top:-30px; margin-bottom:10px }
+    .toggle-wrap label { font-size:12px; margin-right:5px; color:#c40000; font-weight:bold }
+    .toggle { width:30px; height:15px; background:#ccc; border-radius:15px; position:relative; cursor:pointer }
+    .toggle::after { content:""; width:13px; height:13px; background:#fff; border-radius:50%; position:absolute; top:1px; left:1px; transition:0.3s }
+    .toggle.active { background:#c40000 }
+    .toggle.active::after { left:16px }
+    #shareBtn { display:none; margin-top:10px; background:#007bff; width:100% }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="AISelect_20260805_103617_Drive.png" alt="JUAN RAUL Logo">
+    </div>
+    <div class="sub">Çuval Hesaplayıcısı</div>
+
+    <div class="toggle-wrap">
+      <label>Eşit Dağıt</label>
+      <div id="toggle" class="toggle"></div>
+    </div>
+
+    <label>Çuval Türü</label>
+    <select id="bag">
+      <option value="500,350,80">🔵 Mavi Küçük</option>
+      <option value="800,500,110">🔴 Kırmızı Küçük</option>
+      <option value="1200,650,180">🔴 Kırmızı Büyük</option>
+      <option value="450,300,60">📦 Koli 80×50×50</option>
+    </select>
+
+    <!-- خانة جديدة لإدخال رابط الطلبية -->
+    <label>Linkten Hesapla</label>
+    <input id="orderUrl" type="text" placeholder="Sipariş linkini buraya yapıştırın">
+    <button onclick="loadOrder()">Linkten Hesapla</button>
+
+    <label>Boxer</label>
+    <input id="boxer" type="number" min="0">
+
+    <label>Atlet</label>
+    <input id="atlet" type="number" min="0">
+
+    <label>Çorap (Düzine)</label>
+    <input id="sock" type="number" min="0">
+
+    <button onclick="hesapla()">Hesapla</button>
+
+    <div id="result" class="result">
+      <h2 id="total"></h2>
+      <div id="bags"></div>
+      <button id="shareBtn" onclick="exportPDF()">PDF Olarak Paylaş</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // وضعية التوزيع
+    let mode = 'product';
+    const toggle = document.getElementById('toggle');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      mode = toggle.classList.contains('active') ? 'equal' : 'product';
+    });
+
+    // دالة الحساب
+    function toplamCuval(k, b, a, s) {
+      return (b / k[0]) + (a / k[1]) + (s / k[2]);
     }
 
-    async function loadOrder() {
-      const url = document.getElementById("orderUrl").value;
-      if (!url) {
-        alert("Lütfen sipariş linkini girin");
-        return;
-      }
-      try {
-        const response = await fetch(url);
-        const text = await response.text();
-
-        // Regex يلقط البوكسرات والجرابات والشيالات من النص
-        let boxerMatch = text.match(/ONE SIZE.*?(\d+)x(\d+)/);
-        let sockMatch  = text.match(/SOKET.*?(\d+)x(\d+)/);
-        let atletMatch = text.match(/ATLET.*?(\d+)x(\d+)/);
-
-        let boxerCount = boxerMatch ? parseInt(boxerMatch[1]) * parseInt(boxerMatch[2]) : 0;
-        let sockCount  = sockMatch  ? parseInt(sockMatch[1])  * parseInt(sockMatch[2])  : 0;
-        let atletCount = atletMatch ? parseInt(atletMatch[1]) * parseInt(atletMatch[2]) : 0;
-
-        // تعبئة الحقول
-        document.getElementById("boxer").value = boxerCount;
-        document.getElementById("sock").value  = sockCount;
-        document.getElementById("atlet").value = atletCount;
-
-        // تشغيل الحساب أوتوماتيك
-        hesapla();
-      } catch (e) {
-        alert("Sipariş linki okunamadı");
-      }
+    function makeBag(title, p, bb, aa, ss) {
+      let color = "#00b050";
+      if (p < 50) { color = "#ff3b30"; }
+      else if (p < 100) { color = "#ffc107"; }
+      let info = "";
+      if (bb > 0) info += "Boxer: " + bb + "<br>";
+      if (aa > 0) info += "Atlet: " + aa + "<br>";
+      if (ss > 0) info += "Çorap: " + ss + "<br>";
+      return `<details><summary>${title} - %${p}<div class="bar"><div class="fill" style="width:${p}%;background:${color}"></div></div></summary><div class="info">${info}</div></details>`;
     }
 
-    function exportPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    function hesapla() {
+      let k = bag.value.split(",").map(Number),
+          b = +boxer.value || 0,
+          a = +atlet.value || 0,
+          s = +sock.value || 0;
+      let html = "";
+      let oran = toplamCuval(k, b, a, s);
+      total.innerText = "Toplam: " + oran.toFixed(2) + " Çuval";
+      result.style.display = "block";
 
-      doc.setFontSize(16);
-      doc.text("JUAN RAUL - Çuval Raporu", 20, 20);
-      doc.setFontSize(12);
-      doc.text(document.getElementById("total").innerText, 20, 30);
-
-      let y = 50;
-      document.querySelectorAll("#bags details").forEach((bag,i)=>{
-        doc.text(`Çuval ${i+1}`, 20, y);
-        y+=10;
-        bag.querySelector(".info").innerHTML.split("<br>").forEach(line=>{
-          if(line.trim()!==""){
-            doc.text(line.replace(/<[^>]+>/g,''), 30, y);
-            y+=10;
+      if (mode === 'equal') {
+        let cnt = Math.ceil(oran);
+        let percent = (oran / cnt * 100).toFixed(0);
+        for (let i = 1; i <= cnt; i++) {
+          let bb = Math.round(b / cnt);
+          let aa = Math.round(a / cnt);
+          let ss = Math.round(s / cnt);
+          if (i === cnt) {
+            bb = b - Math.round((cnt - 1) * (b / cnt));
+            aa = a - Math.round((cnt - 1) * (a / cnt));
+            ss = s - Math.round((cnt - 1) * (s / cnt));
           }
-        });
-        y+=5;
-      });
-
-      const pdfBlob = doc.output("blob");
-      const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf" });
-
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator.share({
-          title: "Çuval Raporu",
-          text: "Çuval raporu PDF dosyası",
-          files: [file]
-        });
+          html += makeBag(`Çuval ${i}`, percent, bb, aa, ss);
+        }
       } else {
-        doc.save("cuval_raporu.pdf");
+        let rem = { Boxer: b, Atlet: a, Çorap: s };
+        let bagIndex = 1;
+        while (rem.Boxer > 0 || rem.Atlet > 0 || rem.Çorap > 0) {
+          let used = 0, content = { Boxer: 0, Atlet: 0, Çorap: 0 };
+          let p;
+          p = Math.min(rem.Boxer / k[0], 1 - used);
+          if (p > 0) { content.Boxer = Math.round(p * k[0]); rem.Boxer -= content.Boxer; used += p; }
+          p = Math.min(rem.Atlet / k[1], 1 - used);
+          if (p > 0) { content.Atlet = Math.round(p * k[1]); rem.Atlet -= content.Atlet; used += p; }
+          p = Math.min(rem['Çorap'] / k[2], 1 - used);
+          if (p > 0) { content['Çorap'] = Math.round(p * k[2]); rem['Çorap'] -= content['Çorap']; used += p; }
+          html += makeBag(`Çuval ${bagIndex}`, Math.round(used * 100), content.Boxer, content.Atlet, content['Çorap']);
+          bagIndex++;
+        }
       }
-    }
-  </script>
-</body>
-            </html>
+      bags.innerHTML = html;
+      document.getElementById("shareBtn").style.display = "block
