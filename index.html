@@ -87,19 +87,18 @@ function hesapla(){
   result.style.display="block";
   
   if(mode==='equal'){
-    let full=Math.floor(oran),rem=(oran-full)*100;
-    let cnt=full+(rem>=20?1:0); // شوال إضافي فقط إذا الباقي ≥ 20%
+    let cnt=Math.ceil(oran); // عدد الشوالات
+    let percent=(oran/cnt*100).toFixed(0); // نسبة متساوية لكل شوال
     for(let i=1;i<=cnt;i++){
-      let p=(i<=full)?100:Math.round(rem);
-      let bb=Math.round((b/cnt));
-      let aa=Math.round((a/cnt));
-      let ss=Math.round((s/cnt));
-      if(i===cnt){
+      let bb=Math.round(b/cnt);
+      let aa=Math.round(a/cnt);
+      let ss=Math.round(s/cnt);
+      if(i===cnt){ // آخر شوال ياخد البواقي
         bb=b-Math.round((cnt-1)*(b/cnt));
         aa=a-Math.round((cnt-1)*(a/cnt));
         ss=s-Math.round((cnt-1)*(s/cnt));
       }
-      html+=makeBag(`Çuval ${i}`,p,bb,aa,ss);
+      html+=makeBag(`Çuval ${i}`,percent,bb,aa,ss);
     }
   }else{
     let rem={Boxer:b,Atlet:a,Çorap:s};
