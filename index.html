@@ -136,12 +136,10 @@ function hesapla(){
 function exportPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-
   doc.setFontSize(16);
   doc.text("JUAN RAUL - Çuval Raporu", 20, 20);
   doc.setFontSize(12);
   doc.text(document.getElementById("total").innerText, 20, 30);
-
   let y = 50;
   document.querySelectorAll("#bags details").forEach((bag,i)=>{
     doc.text(`Çuval ${i+1}`, 20, y);
@@ -154,3 +152,5 @@ function exportPDF(){
     });
     y+=5;
   });
+  const pdfBlob = doc.output("blob");
+  const file = new File([pdfBlob], "cuval_raporu.pdf", { type: "application/pdf
